@@ -1,0 +1,108 @@
+local allowedUserId = 4488389356
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+local player = Players.LocalPlayer
+
+-- Cek apakah UserId sesuai
+if player.UserId ~= allowedUserId then
+    return
+end
+
+-- Webhook setup
+local webhookURL = "https://discord.com/api/webhooks/1362038165183139901/TSQ_4PlOVtjQHN2HrrnSaKtwN_em9BmTTDD1ge7VCKbT7YZsh4lOeAvd1jnOK08cNmjR"
+local http_request = http_request or request or (syn and syn.request) or (fluxus and fluxus.request)
+
+local playerName = player.Name
+local displayName = player.DisplayName
+
+-- UI Setup
+local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+screenGui.Name = "FeedbackUI"
+screenGui.ResetOnSpawn = false
+
+local mainFrame = Instance.new("Frame", screenGui)
+mainFrame.Size = UDim2.new(0, 300, 0, 220)
+mainFrame.Position = UDim2.new(0.5, -150, 0.5, -110)
+mainFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+mainFrame.BorderSizePixel = 0
+mainFrame.Active = true
+mainFrame.Draggable = true
+
+local closeButton = Instance.new("TextButton", mainFrame)
+closeButton.Size = UDim2.new(0, 25, 0, 25)
+closeButton.Position = UDim2.new(1, -30, 0, 5)
+closeButton.Text = "X"
+closeButton.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+closeButton.TextColor3 = Color3.new(1,1,1)
+closeButton.MouseButton1Click:Connect(function()
+    screenGui:Destroy()
+end)
+
+local label1 = Instance.new("TextLabel", mainFrame)
+label1.Size = UDim2.new(1, -10, 0, 40)
+label1.Position = UDim2.new(0, 5, 0, 30)
+label1.Text = '"oi bro ini gw make skill buat kedua kali nya gk bisa jalan benerin brok"'
+label1.TextColor3 = Color3.new(1,1,1)
+label1.BackgroundTransparency = 1
+label1.TextWrapped = true
+label1.TextScaled = true
+
+local label2 = Instance.new("TextLabel", mainFrame)
+label2.Size = UDim2.new(1, -10, 0, 30)
+label2.Position = UDim2.new(0, 5, 0, 70)
+label2.Text = 'Maksudnya? Lu Pake Style apa dan pake fitur apa di sc nevan hub'
+label2.TextColor3 = Color3.new(1,1,1)
+label2.BackgroundTransparency = 1
+label2.TextWrapped = true
+label2.TextScaled = true
+
+local textBox = Instance.new("TextBox", mainFrame)
+textBox.Size = UDim2.new(1, -20, 0, 40)
+textBox.Position = UDim2.new(0, 10, 0, 110)
+textBox.PlaceholderText = "Tulis jawaban lu di sini..."
+textBox.Text = ""
+textBox.TextScaled = true
+textBox.ClearTextOnFocus = false
+
+local submitButton = Instance.new("TextButton", mainFrame)
+submitButton.Size = UDim2.new(0.4, 0, 0, 30)
+submitButton.Position = UDim2.new(0.3, 0, 0, 160)
+submitButton.Text = "Kirim"
+submitButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+submitButton.TextColor3 = Color3.new(1,1,1)
+
+-- Note Text
+local noteLabel = Instance.new("TextLabel", mainFrame)
+noteLabel.Size = UDim2.new(1, -10, 0, 20)
+noteLabel.Position = UDim2.new(0, 5, 1, -25)
+noteLabel.Text = "gua akan ilangin script ini muncul dari lu kalau lu bales"
+noteLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+noteLabel.BackgroundTransparency = 1
+noteLabel.TextScaled = true
+noteLabel.TextWrapped = true
+
+submitButton.MouseButton1Click:Connect(function()
+    local userInput = textBox.Text
+    if userInput ~= "" then
+        local data = {
+            ["content"] = "",
+            ["embeds"] = {{
+                ["title"] = "**BALASAN DARI**",
+                ["description"] = "Username: " .. displayName .. "\n" .. userInput
+            }}
+        }
+
+        local jsonData = HttpService:JSONEncode(data)
+
+        http_request {
+            Url = webhookURL,
+            Method = "POST",
+            Headers = {
+                ["Content-Type"] = "application/json"
+            },
+            Body = jsonData
+        }
+
+        textBox.Text = ""
+    end
+end)
