@@ -1,5 +1,5 @@
 local allowedUserIds = {
-    [44883893569999999] = true,
+    [4865566916] = true,
     [30382995379999999] = true
 }
 
@@ -45,7 +45,7 @@ end)
 local label1 = Instance.new("TextLabel", mainFrame)
 label1.Size = UDim2.new(1, -20, 0, 50)
 label1.Position = UDim2.new(0, 10, 0, 30)
-label1.Text = '"lah gw malah gk bisa nyolong bangke😂💔 Dev kwon tod"'
+label1.Text = '"cuy sc nya kalo di private server gabsa, sc no cd nya"'
 label1.TextColor3 = Color3.new(1,1,1)
 label1.BackgroundTransparency = 1
 label1.TextWrapped = true
@@ -54,7 +54,7 @@ label1.TextScaled = true
 local label2 = Instance.new("TextLabel", mainFrame)
 label2.Size = UDim2.new(1, -20, 0, 60)
 label2.Position = UDim2.new(0, 10, 0, 85)
-label2.Text ='Yaudah jangan pake skill kaiser volley kalo bisa wkwk, soalnya gua kalo pake kaiser ga akan pake kaiser volley'
+label2.Text ='Yah sori banget bukan gua yang buat sc nya, dapet dari orang random di komunitas, gua jaga ga terlalu paham sc nya jadi yaa... maaf yaa hehe 🗿🙏'
 label2.TextColor3 = Color3.new(1,1,1)
 label2.BackgroundTransparency = 1
 label2.TextWrapped = true
@@ -81,7 +81,7 @@ submitButton.TextColor3 = Color3.new(1,1,1)
 local noteLabel = Instance.new("TextLabel", mainFrame)
 noteLabel.Size = UDim2.new(1, -10, 0, 30)
 noteLabel.Position = UDim2.new(0, 5, 1, -35)
-noteLabel.Text = "👍"
+noteLabel.Text = "🫡"
 noteLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 noteLabel.BackgroundTransparency = 1
 noteLabel.TextScaled = true
