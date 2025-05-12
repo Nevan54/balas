@@ -1,8 +1,4 @@
-game.StarterGui:SetCore("SendNotification", {
-    Title = "COMING SOON UPDATE";
-    Text = "THERE WILL BE AUTO CF";
-    Duration = 7; -- Notif muncul selama 5 detik
-})
+
 
 local allowedUserIds = {
     [486556691699999999] = true,
