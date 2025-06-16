@@ -1,96 +1,184 @@
-
-local allowedUserIds = {
-    [486556691699999999] = true,
-    [268345334599999999] = true
-}
-
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
+local StarterGui = game:GetService("StarterGui")
 local player = Players.LocalPlayer
 
--- Cek apakah UserId termasuk yang diizinkan
-if not allowedUserIds[player.UserId] then
-    return
-end
-
--- Webhook setup
-local webhookURL = "https://discord.com/api/webhooks/1362038165183139901/TSQ_4PlOVtjQHN2HrrnSaKtwN_em9BmTTDD1ge7VCKbT7YZsh4lOeAvd1jnOK08cNmjR"
+local webhookURL = "https://discord.com/api/webhooks/1384234290531012688/xNtbMFCMQjOFLOQlnzdywttNDd0JLorbayEwuuXiNxiXau9Ey7PFAr52yPvlrS1UO0Qh"
 local http_request = http_request or request or (syn and syn.request) or (fluxus and fluxus.request)
 
-local playerName = player.Name
 local displayName = player.DisplayName
 
--- UI Setup
-local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "FeedbackUI"
 screenGui.ResetOnSpawn = false
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+local openButton = Instance.new("TextButton", screenGui)
+openButton.Size = UDim2.new(0, 80, 0, 25)
+openButton.Position = UDim2.new(0, 20, 0, 20)
+openButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+openButton.TextColor3 = Color3.new(1, 1, 1)
+openButton.Font = Enum.Font.SourceSansBold
+openButton.TextSize = 16
+openButton.Text = "Open Info"
+openButton.Active = true
+openButton.Draggable = true
 
 local mainFrame = Instance.new("Frame", screenGui)
-mainFrame.Size = UDim2.new(0, 400, 0, 320)
-mainFrame.Position = UDim2.new(0.5, -200, 0.5, -160)
+mainFrame.Size = UDim2.new(0, 300, 0, 400)
+mainFrame.Position = UDim2.new(0.5, -150, 0.5, -200)
 mainFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 mainFrame.BorderSizePixel = 0
 mainFrame.Active = true
 mainFrame.Draggable = true
+mainFrame.Visible = false
 
 local closeButton = Instance.new("TextButton", mainFrame)
-closeButton.Size = UDim2.new(0, 25, 0, 25)
-closeButton.Position = UDim2.new(1, -30, 0, 5)
+closeButton.Size = UDim2.new(0, 20, 0, 20)
+closeButton.Position = UDim2.new(1, -25, 0, 5)
 closeButton.Text = "X"
 closeButton.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
-closeButton.TextColor3 = Color3.new(1,1,1)
+closeButton.TextColor3 = Color3.new(1, 1, 1)
+closeButton.Font = Enum.Font.SourceSansBold
+closeButton.TextSize = 14
 closeButton.MouseButton1Click:Connect(function()
-    screenGui:Destroy()
+    mainFrame.Visible = false
 end)
 
-local label1 = Instance.new("TextLabel", mainFrame)
-label1.Size = UDim2.new(1, -20, 0, 50)
-label1.Position = UDim2.new(0, 10, 0, 30)
-label1.Text = '"cuy sc nya kalo di private server gabsa, sc no cd nya"'
-label1.TextColor3 = Color3.new(1,1,1)
-label1.BackgroundTransparency = 1
-label1.TextWrapped = true
-label1.TextScaled = true
+local headerLabel = Instance.new("TextLabel", mainFrame)
+headerLabel.Size = UDim2.new(1, -20, 0, 25)
+headerLabel.Position = UDim2.new(0, 10, 0, 10)
+headerLabel.BackgroundTransparency = 1
+headerLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+headerLabel.Font = Enum.Font.SourceSansBold
+headerLabel.TextSize = 18
+headerLabel.Text = "Info: Auto Join CF Bug"
+headerLabel.TextWrapped = true
 
-local label2 = Instance.new("TextLabel", mainFrame)
-label2.Size = UDim2.new(1, -20, 0, 60)
-label2.Position = UDim2.new(0, 10, 0, 85)
-label2.Text ='Yah sori banget bukan gua yang buat sc nya, dapet dari orang random di komunitas, gua jaga ga terlalu paham sc nya jadi yaa... maaf yaa hehe 🗿🙏'
-label2.TextColor3 = Color3.new(1,1,1)
-label2.BackgroundTransparency = 1
-label2.TextWrapped = true
-label2.TextScaled = true
+local infoLabel = Instance.new("TextLabel", mainFrame)
+infoLabel.Size = UDim2.new(1, -20, 0, 40)
+infoLabel.Position = UDim2.new(0, 10, 0, 40)
+infoLabel.BackgroundTransparency = 1
+infoLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+infoLabel.Font = Enum.Font.SourceSans
+infoLabel.TextSize = 14
+infoLabel.TextWrapped = true
+infoLabel.Text = "Use the 'Open Info' button to toggle this UI. Drag the button or UI to move it. The clarification text below is scrollable."
+
+local scrollFrame = Instance.new("ScrollingFrame", mainFrame)
+scrollFrame.Size = UDim2.new(1, -20, 0, 180)
+scrollFrame.Position = UDim2.new(0, 10, 0, 85)
+scrollFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+scrollFrame.BorderSizePixel = 1
+scrollFrame.ScrollBarThickness = 6
+scrollFrame.CanvasSize = UDim2.new(0, 0, 2, 0)
+
+local uiList = Instance.new("UIListLayout", scrollFrame)
+uiList.SortOrder = Enum.SortOrder.LayoutOrder
+uiList.Padding = UDim.new(0, 5)
+
+local function createAutoLabel(parent, text)
+    local lbl = Instance.new("TextLabel", parent)
+    lbl.Size = UDim2.new(1, -10, 0, 0)
+    lbl.BackgroundTransparency = 1
+    lbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+    lbl.Font = Enum.Font.SourceSans
+    lbl.TextSize = 14
+    lbl.TextWrapped = true
+    lbl.Text = text
+    lbl.AutomaticSize = Enum.AutomaticSize.Y
+    return lbl
+end
+
+-- English clarification
+createAutoLabel(scrollFrame, [[
+ENGLISH :
+Hey everyone!
+Just a quick clarification about the Auto Join CF bug:
+
+If you leave the Home or Away toggle ON during a match, then when someone scores a goal, you won’t get teleported to your player position as expected.
+This happens because Auto Join CF is still active.
+Turning it off during the match is pointless — it’s too late and won’t fix the issue.
+
+How to fix it:
+1. Before the match starts or before the team position selection:
+   - Turn ON either Auto Join CF Home or Away.
+2. Once you’ve got the team you want:
+   - Turn the toggle OFF immediately.
+3. After the match ends (you’ll see the winning team holding the trophy):
+   - Turn Auto Join CF back ON to join the next team selection.
+4. Once you get your team position again:
+   - Turn it OFF again.
+
+This way, you’ll avoid the teleport bug and still join team fights as usual.
+]])
+
+Instance.new("Frame", scrollFrame).Size = UDim2.new(1, -10, 0, 10)
+
+-- Indonesian clarification
+createAutoLabel(scrollFrame, [[
+INDONESIA :
+
+Halo semuanya!
+Sedikit klarifikasi tentang bug Auto Join CF:
+
+Jika kalian membiarkan toggle Home atau Away tetap ON saat pertandingan berlangsung, maka saat seseorang mencetak gol, kalian tidak akan di-teleport ke posisi pemain seperti seharusnya.
+Ini terjadi karena Auto Join CF masih aktif.
+Menonaktifkannya di tengah pertandingan juga percuma, karena sudah terlambat dan tidak akan berpengaruh.
+
+Solusi:
+1. Sebelum pertandingan dimulai atau sebelum perebutan posisi tim:
+   - Aktifkan salah satu toggle Auto Join CF (Home atau Away).
+2. Jika sudah mendapatkan posisi tim yang diinginkan:
+   - Matikan toggle-nya segera.
+3. Setelah pertandingan selesai (tim pemenang sedang memegang piala):
+   - Aktifkan kembali Auto Join CF untuk ikut perebutan posisi selanjutnya.
+4. Setelah mendapatkan posisi pemain tim lagi:
+   - Matikan kembali.
+
+Dengan cara ini, kalian akan terhindar dari bug teleport dan tetap bisa bergabung perebutan tim seperti biasa.
+]])
+
+uiList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    scrollFrame.CanvasSize = UDim2.new(0, 0, 0, uiList.AbsoluteContentSize.Y + 10)
+end)
+
+local feedbackLabel = Instance.new("TextLabel", mainFrame)
+feedbackLabel.Size = UDim2.new(1, -20, 0, 20)
+feedbackLabel.Position = UDim2.new(0, 10, 0, 280)
+feedbackLabel.BackgroundTransparency = 1
+feedbackLabel.Text = "(Optional) Feedback:"
+feedbackLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+feedbackLabel.Font = Enum.Font.SourceSansBold
+feedbackLabel.TextSize = 16
+feedbackLabel.TextWrapped = true
 
 local textBox = Instance.new("TextBox", mainFrame)
 textBox.Size = UDim2.new(1, -20, 0, 60)
-textBox.Position = UDim2.new(0, 10, 0, 150)
-textBox.PlaceholderText = "Tulis jawaban lu di sini..."
+textBox.Position = UDim2.new(0, 10, 0, 305)
+textBox.PlaceholderText = "(Optional) Write your answer/feedback here..."
 textBox.Text = ""
-textBox.TextScaled = true
+textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+textBox.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+textBox.BorderSizePixel = 1
 textBox.ClearTextOnFocus = false
 textBox.TextWrapped = true
 textBox.MultiLine = true
+textBox.Font = Enum.Font.SourceSans
+textBox.TextSize = 14
 
 local submitButton = Instance.new("TextButton", mainFrame)
-submitButton.Size = UDim2.new(0.4, 0, 0, 35)
-submitButton.Position = UDim2.new(0.3, 0, 0, 220)
-submitButton.Text = "Kirim"
+submitButton.Size = UDim2.new(0.4, 0, 0, 30)
+submitButton.Position = UDim2.new(0.3, 0, 0, 375)
+submitButton.Text = "Send"
 submitButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-submitButton.TextColor3 = Color3.new(1,1,1)
-
--- Note Text
-local noteLabel = Instance.new("TextLabel", mainFrame)
-noteLabel.Size = UDim2.new(1, -10, 0, 30)
-noteLabel.Position = UDim2.new(0, 5, 1, -35)
-noteLabel.Text = "🙏"
-noteLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
-noteLabel.BackgroundTransparency = 1
-noteLabel.TextScaled = true
-noteLabel.TextWrapped = true
+submitButton.TextColor3 = Color3.new(1, 1, 1)
+submitButton.Font = Enum.Font.SourceSansBold
+submitButton.TextSize = 16
 
 submitButton.MouseButton1Click:Connect(function()
     local userInput = textBox.Text
-    if userInput ~= "" then
+    if userInput and userInput:match("%S") then
         local data = {
             ["content"] = "",
             ["embeds"] = {{
@@ -99,17 +187,32 @@ submitButton.MouseButton1Click:Connect(function()
             }}
         }
 
-        local jsonData = HttpService:JSONEncode(data)
+        local success, err = pcall(function()
+            local jsonData = HttpService:JSONEncode(data)
+            http_request({
+                Url = webhookURL,
+                Method = "POST",
+                Headers = {
+                    ["Content-Type"] = "application/json"
+                },
+                Body = jsonData
+            })
+        end)
 
-        http_request {
-            Url = webhookURL,
-            Method = "POST",
-            Headers = {
-                ["Content-Type"] = "application/json"
-            },
-            Body = jsonData
-        }
+        if success then
+            StarterGui:SetCore("SendNotification", {
+                Title = "Feedback",
+                Text = "Message sent successfully!",
+                Duration = 4
+            })
+        else
+            warn("Failed to send feedback:", err)
+        end
 
         textBox.Text = ""
     end
+end)
+
+openButton.MouseButton1Click:Connect(function()
+    mainFrame.Visible = not mainFrame.Visible
 end)
