@@ -1,4 +1,8 @@
-
+game.StarterGui:SetCore("SendNotification", {
+    Title = "COMING SOON UPDATE";
+    Text = "ALL BUTTONS WILL CHANGE TO TOGGLE, EXCEPT NO CD STYLE SKILL.";
+    Duration = 10; -- Notif muncul selama 5 detik
+})
 
 local allowedUserIds = {
     [486556691699999999] = true,
